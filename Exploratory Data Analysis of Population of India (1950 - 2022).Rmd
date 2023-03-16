@@ -1,0 +1,355 @@
+---
+title: "Exploratory Data Analysis of Population of India (1950 - 2022)"
+author: "Pratik Jadhav"
+date: "2023-02-20"
+output: html_document
+---
+## Introduction
+
+Name of the dataset: Population of India (1950-2022)
+Link to the dataset: https://docs.google.com/spreadsheets/d/1wG_vM2MeeVAyDr3ZLwsWk6R4UhldMfY4noX47j71o_o/edit?usp=sharing 
+
+#### Description
+
+The "Population of India (1950-2022)" dataset on Kaggle contains a comprehensive set of data on the historical population of India and the factors that affect population growth. The dataset includes data from 1950 to 2022 and covers a range of variables, such as
+
+ 1. year                                           
+ 2. population                                     
+ 3. percentage_increase_in_population    
+ 4. population_density                             
+ 5. percentage_increase_in_population_density      
+ 6. urban_population                   
+ 7. urban_population_percentage_of_total_population
+ 8. percentage_increase_in_urban_population        
+ 9. rural_population                               
+10. rural_population_percentage_of_total_population
+11. percentage_increase_in_rural_population        
+12. life_expectancy                                
+13. percentage_increase_in_life_expectancy         
+14. birth_rate                                     
+15. percentage_change_in_birth_rate                
+16. death_rate                                     
+17. percentage_change_in_death_rate                
+18. infant_mortality_rate                          
+19. percentage_change_in_infant_mortality_rate     
+20. fertility_rate                                 
+21. percentage_change_in_fertility_rate            
+22. net_migration_rate                             
+23. percentage_change_in_net_migration_rate 
+
+The dataset consists of 23 columns and 73 rows. 
+
+## Questions
+
+There are several interesting questions that can be solved using R from the Population of India (1950-2022)  dataset. Here are a few examples:
+
+1. What is the trend of population growth in India from 1950 to 2022?
+2. How has the population of India changed over the past few decades?
+3. What are the factors that contribute to population growth in India?
+4. What is the population density of India in different years?
+5. What is the age distribution of the Indian population in different years?
+6. How has the gender ratio in India changed over the years?
+7. What is the literacy rate of India in different years and how does it correlate with population growth?
+8. How has the population of different Indian states changed over the years?
+9. What is India's projected population growth rate for the coming years?
+10. What are the implications of India's growing population on its economy, environment, and society?
+
+
+## Discussion on Tidying and Transforming
+
+
+
+#### Before Tidying Screenshot: 
+
+From the following table we can see a total of 73 rows and 23 columns. The data in the table is not tidy. This is because the headings in the table are all in uppercase. We can also see that there are spaces between words and includes a ‘%’ sign in it. We can also see that the % sign continues within the column. 
+
+
+
+```{r}
+knitr::include_graphics("before_tidy.png")
+```
+
+ 
+#### After Tidying Screenshot: 
+
+From the following table, we can see that there are still 73 rows and 23 columns. After tidying the data all the headings have been converted to lowercase. The space has been replaced by an underscore ‘_’ and the '%' sign has also been removed from the headings as well as columns. 
+`
+```{r}
+knitr::include_graphics("after_tidy.png")
+```
+
+
+
+## Data Exploration
+
+#### Numeric Representation
+
+The ‘Population of India (1950 - 2022) EDA’ dataset consists of a total of 73 rows and 23 columns. 
+The summary of all the column in the dataset is as follows: 
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(stringr)
+library(viridis)
+
+library(readr)
+indian_population_new <- read_csv("indian population new.csv")
+
+
+# Replace % symbol with "percentage" in column headings
+names(indian_population_new) <- gsub("%", "percentage", names(indian_population_new))
+
+#Change Uppercase to lowercase and add "_" in spaces between words
+names(indian_population_new) <- tolower(names(indian_population_new))
+names(indian_population_new) <- gsub(" ", "_", names(indian_population_new))
+
+# Replace % symbol in multiple columns
+indian_population_new$percentage_increase_in_population <- gsub("%", "", indian_population_new$percentage_increase_in_population)
+indian_population_new$percentage_increase_in_population_density <- gsub("%", "", indian_population_new$percentage_increase_in_population_density)
+indian_population_new$percentage_increase_in_urban_population <- gsub("%", "", indian_population_new$percentage_increase_in_urban_population)
+indian_population_new$percentage_increase_in_rural_population <- gsub("%", "", indian_population_new$percentage_increase_in_rural_population)
+indian_population_new$percentage_increase_in_life_expectancy <- gsub("%", "", indian_population_new$percentage_increase_in_life_expectancy)
+indian_population_new$percentage_change_in_birth_rate <- gsub("%", "", indian_population_new$percentage_change_in_birth_rate)
+indian_population_new$percentage_change_in_death_rate <- gsub("%", "", indian_population_new$percentage_change_in_death_rate)
+indian_population_new$percentage_change_in_infant_mortality_rate <- gsub("%", "", indian_population_new$percentage_change_in_infant_mortality_rate)
+indian_population_new$percentage_change_in_fertility_rate <- gsub("%", "", indian_population_new$percentage_change_in_fertility_rate)
+indian_population_new$percentage_change_in_net_migration_rate <- gsub("%", "", indian_population_new$percentage_change_in_net_migration_rate)
+
+names(indian_population_new)
+
+#Numeric Summary
+summary(indian_population_new)
+table(indian_population_new$population_density)    
+
+table(indian_population_new$population_density)
+
+
+head(indian_population_new)
+tail(indian_population_new)
+str(indian_population_new)
+
+median(indian_population_new$population_density)
+mean(indian_population_new$population_density)
+min(indian_population_new$population_density)
+range(indian_population_new$population_density)
+var(indian_population_new$population_density)
+
+quantile(indian_population_new$population_density,0.5)
+quantile(indian_population_new$population_density,0.25)
+quantile(indian_population_new$population_density,0.75)
+
+quantile(indian_population_new$population_density,0.5)
+quantile(indian_population_new$population_density,0.25)
+quantile(indian_population_new$population_density,0.75)
+
+IQR(indian_population_new$population_density)
+
+1:20
+seq(1,20,2)
+
+quantile(indian_population_new$population_density,0.25)
+seq(0,1,0.25)
+
+quantile(indian_population_new$population_density, seq(0,1,0.25))
+quantile(indian_population_new$population_density, seq(0,1,0.05))
+quantile(indian_population_new$population_density, seq(0,1,0.25),1)
+round(quantile(indian_population_new$population_density, seq(0,1,0.25)),1)
+round(quantile(indian_population_new$population_density, seq(0,1,0.05)),1)
+
+```
+
+#### Visual Representation:
+
+##### Data Visualization using one Variable
+
+```{r}
+#Histogram of population density
+
+hist(indian_population_new$population_density,
+     breaks = 20,
+     main = "Histogram of Population Density",
+     xlab = "Population Density",
+     col = "steelblue")
+```
+
+The provided code generates a histogram plot using the dataset indian_population_new to visualize the distribution of population density in India. The plot title "Histogram of Population Density" indicates that it is a graphical representation of the distribution of population density in India, and the x-axis label "Population Density" provides a clear indication of what the x-axis represents. 
+The plot indicates that the population density in India is generally low as most of the population density values fall within the first few bins. However, there are a few extreme values with a very high population density that are represented in the last few bins, resulting in a right-skewed distribution.
+
+
+```{r}
+#Histogram of life expetancy
+hist(indian_population_new$life_expectancy,
+     breaks = 20,
+     main = "Histogram of Life Expectancy",
+     xlab = "Life Expectancy",
+     col = "darkorchid")
+```
+
+The plot is a histogram of the life expectancy variable in the "Population of India (1950-2022)" dataset. The histogram is used to display the distribution of life expectancy in India, with the x-axis representing the range of life expectancy values and the y-axis representing the frequency of occurrence of those values.
+The life expectancy histogram for India indicates that the majority of the values fall between 60-80 years, with a right-skewed distribution. The plot exhibits a peak in frequency around 70 years of life expectancy and some outliers with a life expectancy greater than 90 years. It also portrays a consistent increase in life expectancy over the past few decades, implying better healthcare and living conditions. 
+
+##### Data Visualization using two Variables
+
+```{r}
+# Population Vs. Life Expectancy
+
+ggplot(indian_population_new, aes(x = population, y = life_expectancy)) +
+  geom_point() +
+  labs(x = "Population", y = "Life Expectancy") +
+  ggtitle("Population vs. Life Expectancy Scatter Plot")
+```
+
+The plot is a scatter plot of population vs. life expectancy in India from 1950 to 2022. The x-axis represents the population of India, while the y-axis represents the life expectancy of people in India.
+The scatter plot depicting population and life expectancy in India from 1950 to 2022 indicates a positive correlation between population and life expectancy. We can conclude that there is an increase in life expectancy with an increase in population. 
+
+
+```{r}
+# create the line plot
+ggplot(indian_population_new, aes(x = year, y = life_expectancy)) +
+  geom_line() +
+  xlab("Year") +
+  ylab("Life Expectancy") +
+  ggtitle("Trend of Life Expectancy Over Time")
+```
+
+The plot is a line chart that shows the trend of life expectancy in India over time from 1950 to 2022. The x-axis represents the year, and the y-axis represents the life expectancy in years.
+The plot displays the steady increase in life expectancy in India over the past few decades. The life expectancy in 1950 was around 37 years, and by 2022, it is projected to reach 71 years. This increase can be attributed to improvements in healthcare, sanitation, and nutrition. The plot also shows some fluctuations in the trend, particularly in the 1960s and 1970s, which could be due to changes in public health policies or external factors such as epidemics or famines.
+
+
+```{r}
+# Create a bar plot of the population density by region
+ggplot(indian_population_new, aes(x = factor(year), y = population_density)) + 
+  geom_bar(stat = "identity", fill = "blue") + 
+  labs(title = "Population Density by Year in India", x = "Year", y = "Population Density") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+The plot is a bar chart that shows the population density of India from 1950 to 2022. The x-axis of the plot represents the year, and the y-axis represents the population density. The bar chart displays the population density of India by year, with each bar representing the population density for a particular year.
+The population density of India has increased consistently over the years, with a significant increase from the 1950s to the early 2000s, peaking in the early 1990s. 
+
+
+```{r}
+# Create a new data frame with only the data 
+indian_population <- subset(indian_population_new)
+
+# Create a density plot of birth rate and death rate
+ggplot(indian_population, aes(x = birth_rate, color = "Birth Rate")) +
+  geom_density() +
+  geom_density(aes(x = death_rate, color = "Death Rate")) +
+  labs(title = "Distribution of Birth Rate and Death Rate in India",
+       x = "Rate per 1000 people",
+       y = "Density") +
+  scale_color_manual(name = "Rate Type",
+                     values = c("Birth Rate" = "blue", "Death Rate" = "red"))
+```
+
+
+The density plot of the birth rate and death rate in India is a visual representation of the distribution of the two rates over time. The graph shows that the distribution of both the birth rate and death rate in India is approximately normal, with the birth rate curve skewed to the right and the death rate curve almost symmetrical. 
+The plot also reveals that the birth rate is more variable than the death rate. Over time, there has been a general trend of a decrease in both the birth rate and death rate, and the death rate has consistently been lower than the birth rate, indicating positive population growth in India. The insights gained from this plot can be useful in analyzing the trends and patterns in population growth in India.
+
+##### Data Visualization using three variables
+
+```{r}
+# Create a heatmap of net migration rates vs percentage increase in population density
+ggplot(data = indian_population_new, aes(x = net_migration_rate, y = percentage_increase_in_population_density)) + 
+  geom_tile(aes(fill = population/10^5)) + 
+  scale_fill_gradient(low = "lightblue", high = "darkblue") + 
+  labs(title = "Net Migration Rates vs Percentage Increase in Population Density", 
+       x = "Net Migration Rate", y = "Percentage Increase in Population Density")
+```
+
+The plot shows how the net migration rates and the percentage increase in population density are related over time in India. The darker colours in the heatmap represent a higher population, while the lighter colours represent a lower population. The plot indicates that migration has a positive impact on population density, as higher net migration rates are associated with higher percentage increases in population density. 
+
+However, there are other factors that can affect population growth, such as changes in birth and death rates. The highest percentage increase in population density occurred in the late 1950s and early 1960s, coinciding with high net migration rates. In recent years, both net migration rates and percentage increase in population density have been steadily increasing, indicating continued population growth in India.
+
+
+```{r}
+# Create example data frame
+country <- c("India", "USA", "China")
+urban_pop <- c(50000000, 300000000, 800000000)
+rural_pop <- c(800000000, 60000000, 700000000)
+population_data <- data.frame(country, urban_pop, rural_pop)
+
+# Create stacked bar plot
+barplot(height = t(as.matrix(population_data[,2:3])), 
+        main = "Population by Urban and Rural areas", 
+        xlab = "Country", 
+        ylab = "Population",
+        names.arg = population_data$country, 
+        col = c("blue", "green"), 
+        legend = c("Urban", "Rural"), 
+        args.legend = list(x = "topright", bty = "n"))
+```
+
+The plot is a stacked bar chart that shows the population distribution by urban and rural areas in three countries: India, USA, and China. The y-axis of the plot represents the total population, while the x-axis represents the country names. Each bar is divided into two sections, one for the urban population and one for the rural population.
+From the aforementioned plot, we can see that in India, the rural population is much more than the urban population. In the USA the urban population is more than the rural Population. Moreover, In China, the rural population and the urban population are approximately the same. 
+
+
+```{r}
+ggplot(indian_population, aes(x = year , y = population/10^5)) +
+  geom_point(aes(colour = fertility_rate)) + facet_wrap(~infant_mortality_rate)+
+  xlab("year") +
+  ylab("population") +
+  ggtitle("Distribution of population and fertility rate over years")
+```
+
+The scatter plot shows the relationship between population and fertility rate in India from 1950 to 2022. Each point on the plot represents the population of a particular year, and the colour of the point represents the fertility rate in that year. The facets in the plot represent different infant mortality rates, showing how the population and fertility rates vary with each infant mortality rate.
+
+The plot indicates that the overall trend of the population in India has been increasing, with fluctuations. It also shows a decreasing trend in the fertility rate, with the decline more prominent in recent years. The plot reveals a negative correlation between the fertility rate and infant mortality rate. As the infant mortality rate decreases, the fertility rate also decreases.
+
+The decreasing trend in the population growth rate over the years indicates that the population growth rate is slowly approaching stabilization. The plot also shows outliers where the population growth rate was unusually high or low in a particular year. 
+
+
+## Data Explanation
+
+```{r}
+# Create a new data frame with only the data 
+indian_population <- subset(indian_population_new)
+
+# Create a density plot of birth rate and death rate
+ggplot(indian_population, aes(x = birth_rate, color = "Birth Rate")) +
+  geom_density() +
+  geom_density(aes(x = death_rate, color = "Death Rate")) +
+  labs(title = "Distribution of Birth Rate and Death Rate in India",
+       x = "Rate per 1000 people",
+       y = "Density") +
+  scale_color_manual(name = "Rate Type",
+                     values = c("Birth Rate" = "blue", "Death Rate" = "red"))
+```
+
+
+The density plot of the birth rate and death rate in India is a visual representation of the distribution of the two rates over time. The graph shows that the distribution of both the birth rate and death rate in India is approximately normal, with the birth rate curve skewed to the right and the death rate curve almost symmetrical. 
+The plot also reveals that the birth rate is more variable than the death rate. Over time, there has been a general trend of a decrease in both the birth rate and death rate, and the death rate has consistently been lower than the birth rate, indicating positive population growth in India. The insights gained from this plot can be useful in analyzing the trends and patterns in population growth in India.
+
+
+```{r}
+ggplot(indian_population, aes(x = year , y = population/10^5)) +
+  geom_point(aes(colour = fertility_rate)) + facet_wrap(~infant_mortality_rate)+
+  xlab("year") +
+  ylab("population") +
+  ggtitle("Distribution of population and fertility rate over years")
+```
+
+The scatter plot shows the relationship between population and fertility rate in India from 1950 to 2022. Each point on the plot represents the population of a particular year, and the colour of the point represents the fertility rate in that year. The facets in the plot represent different infant mortality rates, showing how the population and fertility rates vary with each infant mortality rate.
+
+The plot indicates that the overall trend of the population in India has been increasing, with fluctuations. It also shows a decreasing trend in the fertility rate, with the decline more prominent in recent years. The plot reveals a negative correlation between the fertility rate and infant mortality rate. As the infant mortality rate decreases, the fertility rate also decreases.
+
+The decreasing trend in the population growth rate over the years indicates that the population growth rate is slowly approaching stabilization. The plot also shows outliers where the population growth rate was unusually high or low in a particular year. 
+
+
+## Further Work
+
+In future, I will try to use the dataset for the following purposes: 
+
+Correlation analysis: The dataset includes data on various factors affecting population growth, such as birth rate, death rate, fertility rate, and migration rate. We can conduct a correlation analysis to identify the factors that have the most significant impact on population growth in India.
+Comparative analysis: We can compare the population growth rates of India with other countries to gain insights into the unique factors affecting population growth in India.
+
+
+## References
+
+Kaggle dataset link:
+https://www.kaggle.com/datasets/amritharj/population-of-india-19502022
+

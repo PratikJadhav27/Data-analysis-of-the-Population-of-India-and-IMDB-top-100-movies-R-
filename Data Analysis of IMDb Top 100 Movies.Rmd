@@ -1,0 +1,280 @@
+---
+title: 'Data Analysis of IMDb Top 100 Movies'
+author: "Pratik Jadhav"
+date: "2023-02-20"
+output: html_document
+---
+
+## Introduction
+
+Name of the dataset: IMDb Top 100 Movies 
+Link to the dataset: https://docs.google.com/spreadsheets/d/1y2an91gwnVeakJ6UaJtlasXn5nUl9ggyTsCc0la-kcA/edit?usp=sharing 
+
+#### Description
+
+The top 100 movies on the well-known movie and television review website, IMDb, are all included in the "IMDb Top 100 Movies" dataset on Kaggle. The dataset contains details about the movies, such as their movie names, gross total, run time in mins, genre,  as well as their IMDb ratings and the number of votes.
+
+The movies in the dataset, which spans from 1927 to 2017, include a broad variety of genres and other factors. The dataset was last updated in 2018. A CSV file with 100 rows (one for each movie) and 9 columns contains the data (one for each piece of information about the movie).
+
+## Questions
+
+There are several interesting questions that can be solved using R from the IMDb Top 100 Movies dataset. Here are a few questions:
+
+1. What are the top 10 highest-rated movies in the dataset?
+2. What are the top 10 most popular genres among the top 100 movies?
+3. How many movies in the top 100 were directed by women?
+4. Which decade has the most movies in the top 100?
+5. What is the average budget of the movies in the top 100?
+6. What is the average length of the movies in the top 100?
+7. Which actor appears in the most movies in the top 100?
+8. What is the correlation between a movie's budget and its rating in the top 100?
+9. How many movies in the top 100 were released before 1960?
+10. What is the average rating of the top 100 movies per year?
+11. What is the median rating of the top 100 movies?
+12. What is the distribution of ratings in the top 100 movies?
+13. What is the highest-grossing movie in the top 100?
+
+
+## Discussion on Tidying and Transforming
+
+
+
+#### Before Tidying Screenshot: 
+
+From the following table we can see that there are a total of 9 columns and 100 rows including the heading. Before tidying the dataset, the column named ‘gross_total’ had a $ sign and M in front of the value. The ‘genre’ column had more than one variable which would make the plot vague. The ‘year’ column also had a hyphen sign before the year. 
+
+
+
+```{r}
+knitr::include_graphics("before_tidy1.png")
+```
+
+ 
+#### After Tidying Screenshot: 
+
+From the following table, we can see that there are a total of 11 columns and 100 rows including the heading, In this table, we can see that the genre column got separated into three different columns i.e. genre_1, genre_2 and genre_3. The gross_total columns got clean i.e. the $ sign and the M was removed from the column. The hyphen sign was also removed from the year column. 
+`
+```{r}
+knitr::include_graphics("after_tidy1.png")
+```
+
+
+
+## Data Exploration
+
+#### Numeric Representation
+
+The ‘Population of India (1950 - 2022) EDA’ dataset consists of a total of 73 rows and 23 columns. 
+The summary of all the column in the dataset is as follows: 
+
+
+```{r}
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(stringr)
+
+
+# Load the data
+library(readr)
+movies <- read_csv("movies - movies.csv")
+names(movies)
+
+# Split the genre column into separate columns
+movies_01 <- movies %>%
+  separate(genre, c("genre_1", "genre_2", "genre_3"), sep = ", ")
+
+
+#Numeric Summary
+summary(movies)
+table(movies_01$movie_name)    
+
+table(movies_01$movie_name)
+
+head(movies_01)
+tail(movies_01)
+str(movies_01)
+
+median(movies_01$imdb_rating)
+mean(movies_01$imdb_rating)
+min(movies_01$imdb_rating)
+range(movies_01$imdb_rating)
+var(movies_01$imdb_rating)
+
+quantile(movies_01$imdb_rating,0.5)
+quantile(movies_01$imdb_rating,0.25)
+quantile(movies_01$imdb_rating,0.75)
+
+quantile(movies_01$imdb_rating,0.5)
+quantile(movies_01$imdb_rating,0.25)
+quantile(movies_01$imdb_rating,0.75)
+
+IQR(movies_01$imdb_rating)
+
+1:20
+seq(1,20,2)
+
+quantile(movies_01$imdb_rating,0.25)
+seq(0,1,0.25)
+
+quantile(movies_01$imdb_rating, seq(0,1,0.25))
+quantile(movies_01$imdb_rating, seq(0,1,0.05))
+quantile(movies_01$imdb_rating, seq(0,1,0.25),1)
+round(quantile(movies_01$imdb_rating, seq(0,1,0.25)),1)
+round(quantile(movies_01$imdb_rating, seq(0,1,0.05)),1)
+```
+
+
+#### Visual Representation:
+
+##### Data Visualization using one Variable
+```{r}
+table(movies_01$category)
+
+g1 <- ggplot(data = movies_01)
+
+g1 + geom_bar(aes(category))
+```
+
+The plot represents the count of the all the categories in the dataset. From the dataset, we can see that the count of R category is maximum among all the other categories. GP is the category with the lowest count. There are around 57 movies with the R category and 2 movies with GP category.
+
+```{r}
+#Histogram of imdb rating
+
+hist(movies$imdb_rating,
+     breaks = 15,
+     main = "Histogram of IMDB Rating",
+     xlab = "IMDB Rating",
+     col = "steelblue")
+
+
+```
+
+From the aforementioned plot, we can conclude that most of the IMDb ratings from the IMDb list of the top 100 movies lie between 8-8.5. The frequency of the movies is around 20 for the IMDb rating is between 8 to 8.5.
+
+
+```{r}
+#bar plot of genre
+
+barplot_movies <- table(movies_01$genre_1)  
+barplot(barplot_movies, main = "Movie Genre Distribution", 
+        xlab = "Genre", ylab = "Frequency")
+plot(barplot_movies)  
+
+```
+
+From the plot mentioned above, we can see that the genre distribution over movies is uneven. In the IMDb list of top 100 movies the genre with the highest frequency is ‘Action’ and the genre with the lowest frequency is ‘Film-Noir’. We may also infer that the genres most popular with the audience followed by ‘Action’ are ‘Drama’ and ‘Crime.’
+
+##### Data Visualization using two variables
+
+```{r}
+#Duration Vs. Year
+g1<-ggplot(data= movies_01,
+           aes(x=year_of_release,y = run_time_in_min))
+g1
+
+g1+geom_point()
+
+g1+geom_point(alpha= 0)
+g1+geom_point(alpha= 1, color = 'steelblue')
+
+```
+
+From the aforementioned plot, we can see that before 1950 there were few movies from the IMDb list of the top 100 movies which were of duration from 80-120 mins and one movie of a duration of around 240 mins. 
+
+```{r}
+g1+geom_boxplot(alpha= 1)
+g1+geom_boxplot(alpha= 1, color = 'red')
+
+g1+geom_jitter(alpha = 0.9, color = "green")
+g1+geom_boxplot(alpha = 0.9)+geom_jitter(alpha = 0.8)
+```
+
+From the graph above, we can see that most of the movies lie in the range of 110-150 mins from the year 1927 to 2017.  The maximum duration of movies is around 240 mins i.e. around 4 hours and the minimum duration of the movies is around 80 mins. 
+
+
+```{r}
+#genre vs imdb rating
+g2<-ggplot(data= movies_01,
+           aes(x= genre_1,y = imdb_rating))
+g2
+
+g2+geom_point()
+
+g2+geom_point(alpha= 0)
+g2+geom_point(alpha= 1, color = 'steelblue')
+
+```
+
+From the aforementioned plot, we can see that there are 10 genres the dataset talks about. The genre with the highest IMDb rating is drama followed by crime and action. The genre with the lowest IMDb rating is comedy followed by adventure. From the plot, we can also see that the most used genre includes action and drama and the least used genre is film-noir.
+
+```{r}
+g2+geom_boxplot(alpha= 1)
+g2+geom_boxplot(alpha= 1, color = 'red')
+
+g2+geom_jitter(alpha = 0.9, color = "green")
+g2+geom_boxplot(alpha = 0.9)+geom_jitter(alpha = 0.8)
+```
+
+The aforementioned graph represents the boxplot i.e. where most of the IMDb ratings are concentrated for each genre. For example, in the ‘Action’ genre most of the IMDb ratings lie in the range of 8.3 to 8.7.
+
+```{r}
+#imdb rating vs. votes
+g3<-ggplot(data= movies_01,
+           aes(x= imdb_rating,y = votes))
+g3
+
+g3+geom_point()
+
+g3+geom_point(alpha= 0)
+g3+geom_point(alpha= 1, color = 'steelblue')
+
+g3+geom_boxplot(alpha= 1)
+g3+geom_boxplot(alpha= 1, color = 'red')
+
+g3+geom_jitter(alpha = 0.9, color = "green")
+
+```
+
+From the aforementioned plot, we can infer that there are only a few movies with an IMDb rating of 9 or above that have crossed 2 million votes. Most of the movies lie in the range of 8-8.5 IMDb rating and have attained 5 lakhs to 1.3 million votes.
+
+```{r}
+g3+geom_boxplot(alpha = 0.9)+geom_jitter(alpha = 0.8)
+
+```
+
+From the following plot, we can see that most of the movies lie in the range of 8-8.5 IMDb ratings and have attained 5 lakhs to 1.3 million votes. There are around 8 movies that have crossed the milestone of 2 million votes. However, there is only one movie among the list of top 100 IMDb movies which have satisfied both the parameters i.e. IMDb rating greater than 9 and votes of more than 2 million. 
+
+##### Data Visualization using three variables
+
+```{r}
+ggplot(movies_01, aes(x =imdb_rating , y = gross_total_in_million_dollars/10^5)) +
+  geom_point(aes(colour = genre_1)) + facet_wrap(~genre_1)+
+  xlab("IMDB Rating") +
+  ylab("Budget") +
+  ggtitle("IMDB Rating Vs. Budget")
+```
+
+The aforementioned plot consists of and correlates the relationship between three variables namely IMDb rating, budget and genre. From the above plot, we can conclude that Action movies are the ones with the highest budget among all the other genres.  Film-Noir is the genre with the lowest budget. The IMDb rating of the movies is higher for the following genres: Drama, Crime, Action and biography. 
+
+
+```{r}
+ggplot(movies_01, aes(x =imdb_rating , y = gross_total_in_million_dollars/10^5)) +
+  geom_point(aes(colour = category)) + facet_wrap(~genre_1)+
+  xlab("IMDB Rating") +
+  ylab("Budget") +
+  ggtitle("IMDB Rating Vs. Budget")
+```
+
+The aforementioned plot demonstrates and correlates the relationship between four variables namely IMDb rating, budget, genre and category. We can see that the category that is used in most of the genres, has a low budget, and an average rating of 8-8.5 is R. The category with the highest budget is ‘PG-13’ and the one with the lowest budget is ‘Approved’.
+
+## Further Work
+
+In future, I will try to make more engaging and colourful plots so that it becomes easier to interpret what the plot represents. I will also try to work on the column named ‘movies_name’ which I haven’t used in any plot.  
+
+
+## References
+
+Kaggle dataset link:
+https://www.kaggle.com/datasets/themrityunjaypathak/imdb-top-100-movies
